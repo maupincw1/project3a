@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Data Visualizer</h1>
+
+        {% if errors %}
+        <div class="errors">
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/">
+            <label for="symbol">Choose Symbol</label>
+            <select name="symbol" id="symbol">
+                <option value="">-- Select a symbol --</option>
+                {% for symbol in symbols %}
+                <option value="{{ symbol }}" {% if values.symbol == symbol %}selected{% endif %}>{{ symbol }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="chart_type">Choose Chart Type</label>
+            <select name="chart_type" id="chart_type">
+                <option value="">-- Select a chart type --</option>
+                {% for key, name in chart_types.items() %}
+                <option value="{{ key }}" {% if values.chart_type == key %}selected{% endif %}>{{ key }}. {{ name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="time_series">Choose Time Series</label>
+            <select name="time_series" id="time_series">
+                <option value="">-- Select a time series --</option>
+                {% for key, name in time_series.items() %}
+                <option value="{{ key }}" {% if values.time_series == key %}selected{% endif %}>{{ key }}. {{ name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="start_date">Start Date</label>
+            <input type="date" name="start_date" id="start_date" value="{{ values.start_date or '' }}">
+
+            <label for="end_date">End Date</label>
+            <input type="date" name="end_date" id="end_date" value="{{ values.end_date or '' }}">
+
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if chart %}
+        <div class="chart">
+            <embed type="image/svg+xml" src="{{ chart }}">
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
